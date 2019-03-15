@@ -1,0 +1,120 @@
+
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+    .searchbody{
+        text-align: center;
+    }
+    #kind {
+        margin: 15px auto;
+        display: inline-block;
+        width: 80px; height: 40px;
+        border: 3px solid #66aaff;
+        background: white;
+    }
+    .searchbox {
+        margin: 15px auto;
+        display: inline-block;
+        width: 366px; height: 34px;
+        border: 3px solid #66aaff;
+        background: white;
+    }
+    .input_text {
+        width: 348px; height: 21px;
+        margin: 6px 0 0 9px;
+        border: 0;
+        line-height: 21px;
+        font-weight: bold;
+        font-size: 16px;
+        outline: none;
+    }
+    .my-btn {
+        width: 200px;
+        height: 40px;
+        line-height: 40px;
+        border: 1px #3399dd solid;;
+        margin: 15px auto;
+        vertical-align: top;
+        background-color: #66aaff;
+        text-align: center;
+        cursor: pointer;
+        color: #333;
+        transition: all 0.8s;
+    }
+
+    .footer {
+        background-color: antiquewhite;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 90px;
+    }
+
+    my-btn:hover {
+        color: #fff;
+    }
+
+
+    .hover4:hover {
+        box-shadow: 200px 0 0 0 rgba(0, 0, 0, 0.25) inset, -200px 0 0 0 rgba(0, 0, 0, 0.25) inset;
+    }
+
+    .modal-window {
+        position: fixed;
+        background-color: rgba(200, 200, 200, 0.75);
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        opacity: 0;
+        pointer-events: none;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    .modal-window:target {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modal-window>div {
+        width: 80%;
+        position: relative;
+        margin: 2% 10% 10%;
+        padding: 2rem;
+        background: #fff;
+        color: #444;
+    }
+
+    .modal-window header {
+        font-weight: bold;
+    }
+
+    .modal-close {
+        color: #aaa;
+        line-height: 50px;
+        font-size: 80%;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: 0;
+        width: 70px;
+        text-decoration: none;
+    }
+
+    .modal-close:hover {
+        color: #000;
+    }
+
+    .modal-window h1 {
+        font-size: 150%;
+        margin: 0 0 15px;
+    }
+    .nav {
+        background-color: antiquewhite;
+        height: 90px;
+    }

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <link href="utils.css" type="text/css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
+</head>
+<body>
+
+<div class="nav">
+</div>
+<div class="main-banner">
+    <div id="typo">
+        <p id="typing"></p>
+    </div>
+    <div id="cursor">
+        <p>┃</p>
+    </div>
+    <video src="../assets/img/iu2.webm" alt="main-picture" width="100%" autoplay="" loop="true" muted=""></video>
+</div>
+<div class="nav">
+</div>
+<div class="main-list">
+    <div class="searchbody">
+        <select name="kind" id="kind">
+            <option value="0">코드</option>
+            <option value="1">상품명</option>
+            <option value="2">제조사</option>
+        </select>
+        <span class="searchbox">
+            <input class="input_text" type="text" id="keyword">
+        </span>
+        <button class="my-btn hover4" onclick="getProducts()">검색!</button>
+    </div>
+    <ul id="searchList">
+        <li></li>
+    </ul>
+</div>
+
+<div id="open-modal" class="modal-window">
+    <div>
+        <a href="#modal-close" title="Close" class="modal-close">close &times;</a>
+        <h1 id="open-modal-title"></h1>
+        <div id="open-modal-maker"></div>
+        <div id="open-modal-material"></div>
+        <img id="open-modal-img" src="" width="10%">
+        <canvas id="myChart" width="400" height="100"></canvas>
+    </div>
+</div>
+</body>
+<footer class="footer">
+
+</footer>
+<script>
+    const materialTitle = ['0', 'SERVING_WT', '일일 섭취 권장량', '칼로리', '탄수화물', '단백질', '지방', '당류', '나트륨', '콜레스테롤', '포화지방산', '트랜스지방'];
+    let flag = false;
+    window.onload = getProducts;
+
+    function getProducts() {
+        let target = document.getElementById('keyword').value.trim();
+        if (flag === true && target === '') return;
+
+        let kind = document.getElementById('kind').value;
+        let list = document.getElementById('searchList');
+        let materialList;
+
+        fetch('../assets/xml/FoodNutritionInfo.xml')
+            .then(res => res.text())
+            .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+            .then(data => {
+                materialList = data.getElementsByTagName('item');
+            });
+
+        fetch('../assets/xml/foodInfo.xml')
+            .then(res => res.text())
+            .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+            .then(data => {
+                let foodList = data.getElementsByTagName('food');
+                list.innerHTML = "";
+
+                for (let i = 0; i < foodList.length; i++) {
+                    if (flag === true && !foodList[i].childNodes[kind].textContent.includes(target)) continue;
+                    let te = document.createElement('li');
+                    let title = document.createElement('h1');
+                    let maker = document.createElement('div');
+                    let material = document.createElement('div');
+                    let productImg = document.createElement('img');
+
+                    title.innerText = foodList[i].childNodes[1].textContent;
+                    maker.innerText = foodList[i].childNodes[2].textContent;
+                    material.innerText = foodList[i].childNodes[3].textContent;
+                    productImg.setAttribute('src', `../assets/${foodList[i].childNodes[4].textContent}`);
+
+                    productImg.setAttribute('width', '10%');
+                    title.style.display = 'inline-block';
+                    title.style.marginRight = '15px';
+                    maker.style.display = 'inline-block';
+
+                    te.style.border = '2px solid gray';
+                    te.style.marginBottom = '2%';
+                    te.style.marginRight = '14%';
+                    te.style.marginLeft = '8%';
+                    te.style.borderRadius = '15px';
+                    te.style.paddingLeft = '3%';
+                    te.style.paddingRight = '3%';
+                    te.style.paddingBottom = '3%';
+                    te.style.paddingTop = '1%';
+
+                    te.onmouseover = function () {
+                        te.style.border = '2px solid black';
+                    };
+                    te.onmouseleave = function () {
+                        te.style.border = '2px solid gray';
+                    };
+                    let myChart = '';
+                    te.addEventListener('click', () => {
+                        document.getElementById('open-modal-title').innerText = title.innerText;
+                        document.getElementById('open-modal-maker').innerText = maker.innerText;
+                        document.getElementById('open-modal-material').innerText = material.innerText;
+                        document.getElementById('open-modal-img').setAttribute('src', `../assets/${foodList[i].childNodes[4].textContent}`);
+
+                        let ctx = document.getElementById("myChart").getContext('2d');
+                        myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: ['칼로리', '탄수화물', '단백질', '지방', '당류', '나트륨', '콜레스테롤', '포화지방산', '트랜스지방'],
+                                datasets: [{
+                                    label: '# 영양',
+                                    data: [
+                                        materialList[i].childNodes[2].textContent,
+                                        materialList[i].childNodes[3].textContent,
+                                        materialList[i].childNodes[4].textContent,
+                                        materialList[i].childNodes[5].textContent,
+                                        materialList[i].childNodes[6].textContent,
+                                        materialList[i].childNodes[7].textContent,
+                                        materialList[i].childNodes[8].textContent,
+                                        materialList[i].childNodes[9].textContent,
+                                        materialList[i].childNodes[10].textContent
+                                    ],
+                                    backgroundColor: [
+                                        'rgba(255, 99, 132, 0.2)',
+                                        'rgba(54, 162, 235, 0.2)',
+                                        'rgba(255, 206, 86, 0.2)',
+                                        'rgba(75, 192, 192, 0.2)',
+                                        'rgba(153, 102, 255, 0.2)',
+                                        'rgba(255, 159, 64, 0.2)',
+                                        'rgba(100, 200, 129, 0.2)',
+                                        'rgba(50, 10, 6, 0.2)',
+                                        'rgba(30, 30, 64, 0.2)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(255,99,132,1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)',
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(153, 102, 255, 1)',
+                                        'rgba(255, 159, 64, 1)',
+                                        'rgba(100, 200, 129, 0.2)',
+                                        'rgba(50, 10, 6, 0.2)',
+                                        'rgba(30, 30, 64, 0.2)'
+                                    ]
+                                }]
+                            }
+                        });
+                        location.href = '#open-modal';
+                    });
+
+                    te.appendChild(title);
+                    te.appendChild(maker);
+                    te.appendChild(material);
+                    te.appendChild(productImg);
+                    list.appendChild(te);
+                    if (flag === true && kind === '0') break;
+                }
+            }).then(() => flag = true);
+    }
+
+    let str = "What-We-";
+    let charlist = ["SSAFY...", "1ilsang...", "Yongbeom..."];
+    let cl_order = 0;
+    let c = 0;
+
+    setInterval(function () {
+        let isvisible = document.getElementById('cursor').style.visibility;
+        if (isvisible === 'hidden') {
+            document.getElementById('cursor').style.visibility = 'visible'
+        } else {
+            document.getElementById('cursor').style.visibility = 'hidden'
+        }
+    }, 200);
+
+    let firstInterval = setInterval(function () {
+        if (c < 8) {
+            document.getElementById('cursor').style.left = (document.getElementById('typing').offsetWidth + 60) + 'px';
+            document.getElementById('typing').innerText += str[c];
+            c++;
+        }
+        if (c === 8) {
+            let bflag = 1;
+            c = 0;
+            clearInterval(firstInterval);
+            (function () {
+                let flag = 0;
+                setInterval(function () {
+                    if (bflag === 1) {
+                        if (flag === 0) {
+                            document.getElementById('cursor').style.left = (document.getElementById('typing').offsetWidth + 30) + 'px';
+                            if (c < charlist[cl_order].length) {
+                                document.getElementById('typing').innerText += charlist[cl_order][c];
+                                c++;
+                            }
+                            if (c === charlist[cl_order].length) {
+                                flag = 1;
+                            }
+                        }
+                        if (flag === 1) {
+                            if (c >= 0) {
+                                let buf = str;
+                                for (let i = 0; i < c; i++) {
+                                    buf += charlist[cl_order][i];
+                                }
+                                document.getElementById('typing').innerText = buf;
+                                document.getElementById('cursor').style.left = (document.getElementById('typing').offsetWidth - 30) + 'px';
+                                c--;
+                            }
+                            if (c === -1) {
+                                c++;
+                                flag = 0;
+                                if (cl_order === 2) {
+                                    cl_order = 0;
+                                } else {
+                                    cl_order++;
+                                }
+                            }
+                        }
+                    }
+                }, 500);
+            })();
+        }
+    }, 500);
+
+</script>
+<style>
+    .main-banner {
+        background-color: antiquewhite;
+    }
+
+    .main-banner img {
+        position: relative;
+    }
+
+    .main-banner p {
+        position: absolute;
+        margin-left: 20%;
+        font-size: 100px;
+        margin-top: 15%;
+        color: white;
+        z-index: 999;
+    }
+
+    video {
+        margin: auto;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    #cursor {
+        position: relative;
+        left: 20px;
+        visibility: hidden;
+        opacity: 0.5;
+    }
+</style>
+</html>
