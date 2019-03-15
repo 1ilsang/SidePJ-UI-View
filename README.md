@@ -2,6 +2,7 @@
 XML parse, Modal, Typography
 
 - HTML, JS(ES6), CSS 로 간단하게 만들어 보기
+- XML 파싱, 모달, 타이포그래피
 
 <img src="./assets/img/GIF01.gif" alt="Main-Picture" />
 
